@@ -14,6 +14,8 @@ from llama_index.llms.openai import OpenAI
 import openai
 import chainlit as cl
 
+user_avatar = "data/images/user.png"
+professor_avatar = "data/images/professor.png"
 
 # Function to initialize or reload the chat history.
 def load_chat_store():
@@ -96,3 +98,27 @@ def initialize_chatbot(chat_store, container):
     )
 
     return agent
+
+def chat_interface(agent, chat_store):
+    if not os.path.exists(CONVERSATION_FILE) or os.path.getsize(CONVERSATION_FILE) == 0:
+        cl.Message(
+            content="Chào bạn, mình là Chatbot được phát triển bởi AI. Mình sẽ giúp bạn đưa ra những quyết định về tiền đúng đắn giúp tốt hơn cho sức khỏe tinh thần. Hãy nói chuyện với mình để bắt đầu.",
+            role="assistant",
+            avatar=professor_avatar
+        )
+
+    # Capture user input
+    prompt = cl.text_input("Viết tin nhắn tại đây ạ...")
+
+    if prompt:
+        # Display user message
+        cl.Message(content=prompt, role="user", avatar=user_avatar)
+
+        # Get response from agent
+        response = str(agent.chat(prompt))
+
+        # Display assistant response
+        cl.Message(content=response, role="assistant", avatar=professor_avatar)
+
+        # Persist the chat history
+        chat_store.persist(CONVERSATION_FILE)
