@@ -12,10 +12,10 @@ from src.global_settings import STORAGE_PATH, FILES_PATH, CACHE_FILE
 from src.prompts import CUSTOM_SUMMARY_EXTRACT_TEMPLATE
 
 # Load the OpenAI API key from environment variables
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = "OPENAI_API_KEY"
 
 # Settings for OpenAI model
-cl.Settings.llm = OpenAI(model="gpt-4o-mini", temperature=0.2)
+Settings.llm = OpenAI(model="gpt-4o-mini", temperature=0.2)
 
 
 def ingest_documents():

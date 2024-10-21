@@ -99,6 +99,7 @@ def initialize_chatbot(chat_store, container):
 
     return agent
 
+# Chưa hoạt động được
 def chat_interface(agent, chat_store):
     if not os.path.exists(CONVERSATION_FILE) or os.path.getsize(CONVERSATION_FILE) == 0:
         cl.Message(
