@@ -81,24 +81,26 @@ agent = OpenAIAgent.from_tools(
 async def set_starters():
     return [
         cl.Starter(
-            label="Morning routine ideation",
-            message="Can you help me create a personalized morning routine that would help increase my productivity throughout the day? Start by asking me about my current habits and what activities energize me in the morning.",
+            label="Morning Meal",
+            message="Can you help me create a morning meal that boosts my productivity for the day? Let's start by discussing my current eating habits and what activities energize me in the morning.",
             icon="./public/idea.svg",
         ),
 
         cl.Starter(
-            label="Explain superconductors",
-            message="Explain superconductors like I'm five years old.",
+            label="How to Make Pho",
+            message="Explain how to make a simple pho recipe in a way that's easy for anyone to understand.",
             icon="./public/learn.svg",
         ),
+        
         cl.Starter(
-            label="Python script for daily email reports",
-            message="Write a script to automate sending daily email reports in Python, and walk me through how I would set it up.",
+            label="Romantic Dessert",
+            message="What dessert recipe would you recommend for a romantic evening?",
             icon="./public/terminal.svg",
         ),
+        
         cl.Starter(
-            label="Text inviting friend to wedding",
-            message="Write a text asking a friend to be my plus-one at a wedding next month. I want to keep it super short and casual, and offer an out.",
+            label="Delicious Main Course",
+            message="Can you write a recipe for a delicious Vietnamese main course?",
             icon="./public/pen.svg",
         )
     ]
