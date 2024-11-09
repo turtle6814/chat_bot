@@ -21,6 +21,9 @@ from llama_index.agent.openai import OpenAIAgent
 from src.prompts import CUSTOM_AGENT_SYSTEM_TEMPLATE
 from langchain.memory import ConversationBufferMemory
 from chainlit.types import ThreadDict
+import nest_asyncio
+
+nest_asyncio.apply()
 load_dotenv()
 
 
@@ -141,8 +144,8 @@ async def on_chat_resume(thread: ThreadDict):
 
 @cl.step(type="tool")
 async def call_tool(message):
-    response = agent.chat(message)
-    return str(response)
+    response = agent.astream_chat(message)
+    return response
 
 
 @cl.on_message
@@ -150,11 +153,15 @@ async def run_conversation(message: cl.Message):
     # message_history = cl.user_session.get("message_history")
     # message_history.append({"name": "user", "role": "user", "content": message.content})
     memory = cl.user_session.get("memory")  # type: ConversationBufferMemory
+    res = cl.Message(content="", author="Answer")
+    collected_res = ""
+    answer = agent.stream_chat(message.content)
+    response_gen = answer.response_gen
 
-    answer = await call_tool(message.content)
-    res = cl.Message(content=answer, author="Answer")
-
-    await res.send()
+    for token in response_gen:
+        collected_res += token
+        res.content = collected_res
+        await res.send()
 
     memory.chat_memory.add_user_message(message.content)
     memory.chat_memory.add_ai_message(res.content)
