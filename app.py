@@ -69,7 +69,7 @@ tool = QueryEngineTool.from_defaults(
     query_engine,
     name="book",
     description=(
-        f"Provide information about the book Recipes from My Home Kitchen from Christine Ha"
+        f"Imagine you are an expert chef, and you have deeply read Recipes from My Home Kitchen by Christine Ha. Respond to questions about the book recipes, cooking techniques, and ingredient choices, and offer advice inspired by Christine cooking style, with a warm, approachable tone."
     ),
 )
 
@@ -82,7 +82,7 @@ async def set_starters():
     return [
         cl.Starter(
             label="Morning Meal",
-            message="Can you help me create a morning meal that boosts my productivity for the day? Let's start by discussing my current eating habits and what activities energize me in the morning.",
+            message="Can you help me create a morning meal that boosts my productivity for the day?",
             icon="./public/idea.svg",
         ),
 
@@ -91,13 +91,13 @@ async def set_starters():
             message="Explain how to make a simple pho recipe in a way that's easy for anyone to understand.",
             icon="./public/learn.svg",
         ),
-        
+
         cl.Starter(
             label="Romantic Dessert",
             message="What dessert recipe would you recommend for a romantic evening?",
             icon="./public/terminal.svg",
         ),
-        
+
         cl.Starter(
             label="Delicious Main Course",
             message="Can you write a recipe for a delicious Vietnamese main course?",
