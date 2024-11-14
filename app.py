@@ -142,26 +142,20 @@ async def on_chat_resume(thread: ThreadDict):
     cl.user_session.set("memory", memory)
 
 
-@cl.step(type="tool")
-async def call_tool(message):
-    response = agent.astream_chat(message)
-    return response
-
-
 @cl.on_message
 async def run_conversation(message: cl.Message):
     # message_history = cl.user_session.get("message_history")
     # message_history.append({"name": "user", "role": "user", "content": message.content})
     memory = cl.user_session.get("memory")  # type: ConversationBufferMemory
     res = cl.Message(content="", author="Answer")
-    collected_res = ""
     answer = agent.stream_chat(message.content)
     response_gen = answer.response_gen
 
     for token in response_gen:
-        collected_res += token
-        res.content = collected_res
-        await res.send()
+
+        await res.stream_token(str(token))
+
+    await res.send()
 
     memory.chat_memory.add_user_message(message.content)
     memory.chat_memory.add_ai_message(res.content)
