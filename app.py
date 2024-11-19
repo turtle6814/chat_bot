@@ -18,6 +18,8 @@ import chainlit as cl
 from dotenv import load_dotenv
 from llama_index.core.tools import QueryEngineTool, ToolMetadata, FunctionTool
 from llama_index.agent.openai import OpenAIAgent
+from llama_index.core.base.llms.types import ChatMessage
+from llama_index.core.base.llms.types import MessageRole
 from src.prompts import CUSTOM_AGENT_SYSTEM_TEMPLATE
 from langchain.memory import ConversationBufferMemory
 from chainlit.types import ThreadDict
@@ -131,6 +133,9 @@ async def start():
 
 @cl.on_chat_resume
 async def on_chat_resume(thread: ThreadDict):
+    global agent
+    cl.user_session.set(
+        "memory", ConversationBufferMemory(return_messages=True))
     memory = ConversationBufferMemory(return_messages=True)
     root_messages = [m for m in thread["steps"] if m["parentId"] == None]
     for message in root_messages:
@@ -138,7 +143,16 @@ async def on_chat_resume(thread: ThreadDict):
             memory.chat_memory.add_user_message(message["output"])
         else:
             memory.chat_memory.add_ai_message(message["output"])
-
+    previous_messages = []
+    for m in thread["steps"]:
+        if (m["type"] == "user_message"):
+            previous_messages.append(ChatMessage(
+                role=MessageRole.USER, content=m["output"]))
+        elif (m["type"] == "assistant_message"):
+            previous_messages.append(ChatMessage(
+                role=MessageRole.ASSISTANT, content=m["output"]))
+    agent = OpenAIAgent.from_tools(
+        [multiply_tool, add_tool, tool], chat_history=previous_messages, verbose=True)
     cl.user_session.set("memory", memory)
 
 
